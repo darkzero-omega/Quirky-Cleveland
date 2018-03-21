@@ -118,7 +118,7 @@
     var geocodingName;
 
     function initMap() {
-      database.ref("/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
         preLoadedAttractions = snapshot.val();
         
@@ -343,7 +343,7 @@
     }
 
     function createPreloadedList() {
-      database.ref("/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("/preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
         for (i = 0; i < snapshot.val().length; i++) {
           var name = snapshot.val()[i].name;

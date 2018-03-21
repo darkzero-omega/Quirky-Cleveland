@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Firebase Database Upload</title>
+	  <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+	var config = {
+      apiKey: "AIzaSyBNvq6AmEOQst9c2aSTD6sFlQ0MmHmX2j0",
+      authDomain: "new-project-97d65.firebaseapp.com",
+      databaseURL: "https://new-project-97d65.firebaseio.com",
+      projectId: "new-project-97d65",
+      storageBucket: "new-project-97d65.appspot.com",
+      messagingSenderId: "151445565306"
+    };
+
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
+    var preLoadedAttractions =[
+      {position: {lat: 41.5252, lng: -81.6459}, 
+       name: "Slovenian Museum and Archives", 
+       address: "6407 St Clair Ave, Cleveland, OH 44103"},
+
+      {position: {lat: 41.5364, lng: -81.6134}, 
+       name: "Birthplace of Superman - Jerry Siegel's House", 
+       address: "10622 Kimberly Ave, Cleveland, OH 44108"},
+
+      {position: {lat: 41.5057, lng: -81.6924}, 
+       name: "Free Stamp", 
+       address: "601 Lakeside Ave E, Cleveland, OH 44114"},
+
+      {position: {lat: 41.5059, lng: -81.6084}, 
+       name: "Dittrick Museum of Medical History", 
+       address: "Allen Memorial Medical Library, 11000 Euclid Ave #3, Cleveland, OH 44106"},
+
+      {position: {lat: 41.5131, lng: -81.5905}, 
+       name: "Haserot Angel", 
+       address: "12316 Euclid Ave, Cleveland, OH 44106"},
+
+      {position: {lat: 41.4687, lng: -81.6874}, 
+       name: "A Christmas Story House", 
+       address: "3159 W 11th St, Cleveland, OH 44109"},
+
+      {position: {lat: 41.5988, lng: -81.5265}, 
+       name: "Polka Hall of Fame", 
+       address: "605 E 222nd St, Cleveland, OH 44123"},
+
+      {position: {lat: 41.5017, lng: -81.6969}, 
+       name: "Cleveland Police Museum", 
+       address: "1300 Ontario St, Cleveland, OH 44113"},
+
+      {position: {lat: 41.4767, lng: -81.7783}, 
+       name: "The Museum of Divine Statues", 
+       address: "12905 Madison Ave, Lakewood, OH 44107"},
+
+      {position: {lat: 41.5009, lng: -81.6818}, 
+       name: "GE Chandelier", 
+       address: "E 14th St, Cleveland, OH 44115"},
+
+    ];
+
+    database.ref("/preloaded").set({
+        "preloaded-attractions": preLoadedAttractions
+    });
+</script>
+</body>
+</html>
