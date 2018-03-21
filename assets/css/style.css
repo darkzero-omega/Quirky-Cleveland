@@ -6,8 +6,76 @@
 }
 
 body{
-     background-color: white;    
+     height:500 ;
+     width: 1100;    
 
+}
+
+#carousel{
+     overflow: hidden;
+
+}
+
+#carousel .carousel-img{
+     height: 100%;
+     width: 100%;
+     max-height: 100%;
+     max-width: 100% ;
+     position: absolute;
+     opacity: 0;
+     -webkit-animation-name: "css-animation-fade";
+     -webkit-animation-duration: 30sec; 
+     -webkit-animation-iteration-count: infinite;
+
+
+}
+
+#carousel .carousel-img:nth-child(2){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(3){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(4){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(5){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(6){
+     -webkit-animation-delay: 15s;
+} 
+
+#carousel .carousel-img:nth-child(7){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(8){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(9){
+     -webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(10){
+     -webkit-animation-delay: 15s;
+}
+
+
+
+@-webkit-keyframes css-animation-fade{
+
+     from { opacity: 0;}
+         5% {opacity: 1;}  
+         15% {opacity: 1;}
+         20% {opacity: 0;}  
+     to {opacity: 0;}
+     
 }
 
 header{
@@ -34,18 +102,5 @@ header > h1{
 
 }
 
-#slideshow { 
-    margin: 50px auto; 
-    position: relative; 
-    width: 240px; 
-    height: 240px; 
-    padding: 10px; 
-    box-shadow: 0 0 20px rgba(0,0,0,0.4); 
-}
 
-#slideshow > div { 
-    position: absolute; 
-    top: 10px; 
-    left: 10px; 
-    right: 10px; 
-    bottom: 10px; 
+
