@@ -23,7 +23,7 @@ body{
      max-width: 100% ;
      position: absolute;
      opacity: 0;
-     -webkit-animation-name: "css-animation-fade";
+     -webkit-animation-name: "ss-animation-fade";
      -webkit-animation-duration: 30sec; 
      -webkit-animation-iteration-count: infinite;
 
