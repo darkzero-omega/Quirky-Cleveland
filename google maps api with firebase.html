@@ -24,6 +24,8 @@
       <input id="autocomplete">
       <button id="search">Search</button>
     <button id="togglesearchresults">Clear Search Results</button>
+    <br>
+    <input type="text" id="searchResultsInput" placeholder="Start typing here to search results">
     <table>
       <tr>
         <th>Name </th>
@@ -35,6 +37,7 @@
     <hr>
     <h2>Browse Attractions</h2>
       <h3>Our own recommended offbeat attractions:</h3>
+      <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
         <table>
         <tr>
           <th>Name </th>
@@ -45,6 +48,7 @@
       </table>
       <hr>
       <h3>User Recommended offbeat attractions:</h3>
+      <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
         <table>
           <tr>
             <th>Name </th>
@@ -54,6 +58,33 @@
           <tbody id="user-added-list"></tbody>
         </table>
   <script>
+    //$(document).ready(function() {
+      $("#searchResultsInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#places tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    //});
+
+    //$(document).ready(function() {
+      $("#searchpreloaded").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#preloaded-list tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    //});
+
+    //$(document).ready(function() {
+      $("#search-user-added").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#user-added-list tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    //});
+
     var config = {
       apiKey: "AIzaSyBNvq6AmEOQst9c2aSTD6sFlQ0MmHmX2j0",
       authDomain: "new-project-97d65.firebaseapp.com",
@@ -87,7 +118,7 @@
     var geocodingName;
 
     function initMap() {
-      database.ref("/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
         preLoadedAttractions = snapshot.val();
         
@@ -153,6 +184,7 @@
         removeSearchResults();
         searchEntry = document.getElementById("autocomplete").value
         document.getElementById("autocomplete").value = "";
+        //document.getElementById("searchResultsInput").value = "";
         
         var bounds = new google.maps.LatLngBounds(
           {lat: 41.359552, lng: -81.965657}, {lat: 41.615186, lng: -81.398746});
@@ -220,6 +252,7 @@
         searchMarkers = [];
         var placesList = document.getElementById("places")
         placesList.innerHTML = "";
+        document.getElementById("searchResultsInput").value = "";
       }
 
       $(document).on("click", "#submit", function() {
@@ -302,10 +335,15 @@
           });
         } 
       }
+
+      database.ref("/user added attractions").on("child_added", function(snapshot) {
+        createUserAddedList();
+        setAddedAttractions();
+      });
     }
 
     function createPreloadedList() {
-      database.ref("/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("/preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
         for (i = 0; i < snapshot.val().length; i++) {
           var name = snapshot.val()[i].name;
@@ -334,12 +372,11 @@
     createPreloadedList();
 
     function createUserAddedList() {
-      document.getElementById("user-added-list").innerHTML = "";
-
+      
       database.ref("/user added attractions").once('value').then(function(snapshot) {
+        document.getElementById("user-added-list").innerHTML = "";
 
         snapshot.forEach(function(place) {
-          console.log(place.val().name);
 
           var name = place.val().name;
           var address = place.val().address;
@@ -364,12 +401,10 @@
       })
     }
 
-    //createUserAddedList();
-
-  database.ref("/user added attractions").on("child_added", function(snapshot) {
-    createUserAddedList();
-    setAddedAttractions();
-  });
+  // database.ref("/user added attractions").on("child_added", function(snapshot) {
+  //   createUserAddedList();
+  //   setAddedAttractions();
+  // });
 
   </script>
   <script async defer
