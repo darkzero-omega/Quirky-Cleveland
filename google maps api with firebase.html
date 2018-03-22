@@ -318,11 +318,21 @@
     //code for setting a new attraction added by user
       geocoding.onclick = function(event) {
         var address = document.getElementById("geocodinginput").value;
-        if (document.getElementById("geocoding-response").innerHTML === "") {
+  
+        document.getElementById("geocoding-response").innerHTML = "";
+        
           $.ajax({
             url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms",
             method: "GET"
           }).then(function(response) {
+            console.log(response.status)
+            if (response.status === "ZERO_RESULTS") {
+              var geocodingResponse = document.getElementById("geocoding-response");
+              var addressDiv = document.createElement('div');
+              geocodingResponse.appendChild(addressDiv);
+
+              addressDiv.innerHTML = "<strong>Please enter a valid address.</strong>"
+            } else {
             var geocodingResponse = document.getElementById("geocoding-response");
             var addressDiv = document.createElement('div');
             geocodingResponse.appendChild(addressDiv);
@@ -332,8 +342,8 @@
             
             geocodingAddress = response.results[0].formatted_address;
             geocodingPosition = response.results[0].geometry.location;
+            }
           });
-        } 
       }
 
       database.ref("/user added attractions").on("child_added", function(snapshot) {
