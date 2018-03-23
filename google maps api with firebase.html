@@ -25,15 +25,17 @@
       <button id="search">Search</button>
     <button id="togglesearchresults">Clear Search Results</button>
     <br>
-    <input type="text" id="searchResultsInput" placeholder="Start typing here to search results">
-    <table>
-      <tr>
-        <th>Name </th>
-        <th>Address </th>
-        <th>Additional Information</th>
-      </tr>
-      <tbody id="places"></tbody>
-    </table>
+    <div id="search-results">
+      <input type="text" id="searchResultsInput" placeholder="Start typing here to search results">
+      <table>
+        <tr>
+          <th>Name </th>
+          <th>Address </th>
+          <th>Additional Information</th>
+        </tr>
+        <tbody id="places"></tbody>
+      </table>
+    </div>
     <hr>
     <h2>Browse Attractions</h2>
       <h3>Our own recommended offbeat attractions:</h3>
@@ -61,6 +63,8 @@
           <p>Map Icons Credit: <a href="http://www.icons-land.com/">Icons Land</a></p>
         </div>
   <script>
+      var searchResults = document.getElementById("search-results");
+      searchResults.style.display = "none";
 
       //The following 3 blocks of code are JQuery functions used to search lists of preloaded and user added attractions as well as search results 
       $("#searchResultsInput").on("keyup", function() {
@@ -229,6 +233,8 @@
 
         //Creates a list of returned results in the HTML
         function createList(place) {
+          searchResults.style.display = "block";
+
           var placesList = document.getElementById("places")
 
           var newRow = document.createElement('tr');
@@ -261,6 +267,7 @@
         var placesList = document.getElementById("places")
         placesList.innerHTML = "";
         document.getElementById("searchResultsInput").value = "";
+        searchResults.style.display = "none";
       }
 
       //This function pulls user added attractions from the database and loops through them to set them on the map
