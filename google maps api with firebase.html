@@ -14,7 +14,7 @@
 </head>
 <body>
 	<h3>My Google Maps with Firebase</h3>
-    <button id="togglepreloaded">Show/Hide PreLoaded</button><button id="toggleuseradded">Show/Hide User Added</button>
+    <button id="togglepreloaded">Show/Hide PreLoaded<img src="assets/map icons/map-marker-icon-small.png"></button><button id="toggleuseradded">Show/Hide User Added<img src="assets/map icons/map-marker-icon-green-small.png"></button>
     <div id="map"></div>
     <h3>Add a new attraction</h3>
       <input type="text" name="" id="geocodinginput"><button id="geocoding">Search for Address</button>
@@ -57,34 +57,34 @@
           </tr>
           <tbody id="user-added-list"></tbody>
         </table>
+        <div>
+          <p>Map Icons Credit: <a href="http://www.icons-land.com/">Icons Land</a></p>
+        </div>
   <script>
-    //$(document).ready(function() {
+
+      //The following 3 blocks of code are JQuery functions used to search lists of preloaded and user added attractions as well as search results 
       $("#searchResultsInput").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#places tr").filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
-    //});
-
-    //$(document).ready(function() {
+    
       $("#searchpreloaded").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#preloaded-list tr").filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
-    //});
-
-    //$(document).ready(function() {
+  
       $("#search-user-added").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#user-added-list tr").filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
-    //});
 
+    //This code configures the Firebase database used to hold preloaded and user added location data
     var config = {
       apiKey: "AIzaSyBNvq6AmEOQst9c2aSTD6sFlQ0MmHmX2j0",
       authDomain: "new-project-97d65.firebaseapp.com",
@@ -109,7 +109,6 @@
     var showSearchResults;
     var searchMarkers = [];
 
-    //var newAttractions = [];
     var newAttractionsMarkers = [];
     var showUserAdded;
 
@@ -117,7 +116,10 @@
     var geocodingPosition;
     var geocodingName;
 
+    //All functions using the Google Maps API must be used inside the initMap function specified as the callback function in the API url link
     function initMap() {
+
+      //This Code deals with setting, showing, and hiding preloaded data from Firebase as well as configuring the google map around the desired location
       database.ref("preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
         preLoadedAttractions = snapshot.val();
@@ -133,8 +135,6 @@
           {lat: 41.359552, lng: -81.965657}, {lat: 41.615186, lng: -81.398746});
         map.fitBounds(bounds);
 
-
-      //This Code deals with setting, showing, and hiding preloaded data
         function setPreLoadedAttractions() {
           showPreLoaded = true;
 
@@ -142,7 +142,7 @@
             var marker = new google.maps.Marker({
               position: preLoadedAttractions[i].position,
               map: map,
-              icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"});
+              icon: "assets/map icons/map-marker-icon.png"});
 
             marker.content = "<strong>" + preLoadedAttractions[i].name + "</strong>" + "<br> " + preLoadedAttractions[i].address;
 
@@ -156,8 +156,10 @@
           }     
         }
 
+        //Calling the function here ensures preloaded attractions are set when page loads
         setPreLoadedAttractions();
 
+        //A click even to the "Show/Hide" button to show/hide map icons
         togglepreloaded.onclick = function(event) {
           if (showPreLoaded === true) {
             removePreLoadedMarkers();
@@ -171,6 +173,7 @@
           
         }
         
+        //Removes preloaded markers by setting them to null. Preloaded locations are put into an array when set; this function loops through that array and then empties the array
         function removePreLoadedMarkers() {
           for (i = 0; i < preLoadedMarkers.length; i++) {
             preLoadedMarkers[i].setMap(null);
@@ -179,13 +182,14 @@
         }
 
       });
-      //This code deals with searching the map using the places and autocomplete api
+
+      //This code deals with searching the map using the places
       search.onclick = function(event) {
         removeSearchResults();
         searchEntry = document.getElementById("autocomplete").value
         document.getElementById("autocomplete").value = "";
-        //document.getElementById("searchResultsInput").value = "";
         
+        //Sets the bounds into which the search is biased
         var bounds = new google.maps.LatLngBounds(
           {lat: 41.359552, lng: -81.965657}, {lat: 41.615186, lng: -81.398746});
         map.fitBounds(bounds);
@@ -198,6 +202,7 @@
         var service = new google.maps.places.PlacesService(map);
         service.textSearch(request, callback);
 
+        //Sets returned locations on the map
         function callback(results, status) {
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
@@ -206,6 +211,7 @@
               var marker = new google.maps.Marker({
                 position: place.geometry.location,
                 map: map,
+                icon: "assets/map icons/map-marker-icon-pink.png"
               })
 
               marker.content = "<strong>" + place.name + "</strong>" + "<br> " + place.formatted_address;
@@ -221,6 +227,7 @@
           }
         }
 
+        //Creates a list of returned results in the HTML
         function createList(place) {
           var placesList = document.getElementById("places")
 
@@ -245,6 +252,7 @@
         removeSearchResults();
       }
 
+      //Function to clear search results. Removing the icons from the map works in the same way as hiding preloaded attractions.
       function removeSearchResults() {
         for (i = 0; i < searchMarkers.length; i++) {
           searchMarkers[i].setMap(null);
@@ -255,23 +263,7 @@
         document.getElementById("searchResultsInput").value = "";
       }
 
-      $(document).on("click", "#submit", function() {
-        geocodingName = document.getElementById("locationname").value;
-
-        database.ref("/user added attractions").push({
-          position: geocodingPosition, 
-          name: geocodingName, 
-          address: geocodingAddress
-        })
-
-        setAddedAttractions();
-      });
-
-      $(document).on("click", "#clearaddress", function() {
-        document.getElementById("geocoding-response").innerHTML = "";
-        document.getElementById("geocodinginput").value = "";
-      })
-
+      //This function pulls user added attractions from the database and loops through them to set them on the map
       function setAddedAttractions() {
         showUserAdded = true;
 
@@ -281,6 +273,7 @@
           var marker = new google.maps.Marker({
             position: place.val().position,
             map: map,
+            icon: "assets/map icons/map-marker-icon-green.png"
           })
 
           marker.content = "<strong>" + place.val().name + "</strong>" + "<br> " + place.val().address;
@@ -296,8 +289,10 @@
       });
     }
 
+    //Calling the function here ensures database user added attractions are set when page loads
     setAddedAttractions();
 
+    //This function removes attractions from the map 
     function removeNewAttractionsMarkers() {
           for (i = 0; i < newAttractionsMarkers.length; i++) {
             newAttractionsMarkers[i].setMap(null);
@@ -305,6 +300,7 @@
           newAttractionsMarkers = [];
         }
 
+    //This click event shows/hids user added locations on the map by calling the corresponding functions
     toggleuseradded.onclick = function(event) {
       if (showUserAdded === true) {
         removeNewAttractionsMarkers();
@@ -315,7 +311,7 @@
       
     }
 
-    //code for setting a new attraction added by user
+    //This click event uses the Google Places API to add a new location to the user added branch of the database
       geocoding.onclick = function(event) {
         var address = document.getElementById("geocodinginput").value;
   
@@ -346,12 +342,35 @@
           });
       }
 
+      //Collects user added info and sends it to the database, then calls the function to add it to the map
+      $(document).on("click", "#submit", function() {
+        geocodingName = document.getElementById("locationname").value;
+
+        database.ref("/user added attractions").push({
+          position: geocodingPosition, 
+          name: geocodingName, 
+          address: geocodingAddress
+        })
+
+        document.getElementById("geocoding-response").innerHTML = "";
+        document.getElementById("geocodinginput").value = "";        
+
+        setAddedAttractions();
+      });
+
+      $(document).on("click", "#clearaddress", function() {
+        document.getElementById("geocoding-response").innerHTML = "";
+        document.getElementById("geocodinginput").value = "";
+      })
+
+      //This code listens to the user added locations in the database, and updates the map and user added list when there are any changes
       database.ref("/user added attractions").on("child_added", function(snapshot) {
         createUserAddedList();
         setAddedAttractions();
       });
     }
 
+    //The following 2 functions create lists of the preloaded and user added attractions in database, including name, address, and additional information
     function createPreloadedList() {
       database.ref("/preloaded/preloaded-attractions").once('value').then(function(snapshot) {
 
@@ -379,6 +398,7 @@
       })
     }
 
+    //Creates preloaded list on page load
     createPreloadedList();
 
     function createUserAddedList() {
@@ -410,11 +430,6 @@
         });
       })
     }
-
-  // database.ref("/user added attractions").on("child_added", function(snapshot) {
-  //   createUserAddedList();
-  //   setAddedAttractions();
-  // });
 
   </script>
   <script async defer
