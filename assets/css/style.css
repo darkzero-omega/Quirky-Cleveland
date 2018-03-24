@@ -1,106 +1,263 @@
-*{
-     box-sizing: border-box;
-     margin: 0;
-     padding: 0;
-
-}
-
-body{
-     height:500 ;
-     width: 1100;    
-
-}
-
-#carousel{
-     overflow: hidden;
-
-}
-
-#carousel .carousel-img{
-     height: 100%;
-     width: 100%;
-     max-height: 100%;
-     max-width: 100% ;
-     position: absolute;
-     opacity: 0;
-     -webkit-animation-name: "ss-animation-fade";
-     -webkit-animation-duration: 30sec; 
-     -webkit-animation-iteration-count: infinite;
-
-
-}
-
-#carousel .carousel-img:nth-child(2){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(3){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(4){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(5){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(6){
-     -webkit-animation-delay: 15s;
-} 
-
-#carousel .carousel-img:nth-child(7){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(8){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(9){
-     -webkit-animation-delay: 15s;
-}
-
-#carousel .carousel-img:nth-child(10){
-     -webkit-animation-delay: 15s;
+body {
+	background-color: #111;
+	color: #f8f8f8;
+	font-family: 'IBM Plex Sans', sans-serif;
 }
 
 
 
-@-webkit-keyframes css-animation-fade{
-
-     from { opacity: 0;}
-         5% {opacity: 1;}  
-         15% {opacity: 1;}
-         20% {opacity: 0;}  
-     to {opacity: 0;}
-     
+header, p {
+    padding: 20px;
+    text-align: center
+    
 }
 
-header{
-     background: white;
-     margin: 20px;
-}
-
-
-header > h1{
-
-     background: -webkit-linear-gradient(rgb(0, 0, 0), #333);
-     -webkit-background-clip: text;
-     -webkit-text-fill-color: transparent;
-     font-family: 'IBM Plex Sans', sans-serif;
-     text-align: center;
-}
-
-#user-message{
-     color: #006421;
-     font-family: 'IBM Plex Sans', sans-serif;
-     margin: 15px;
-     padding: 10px;
-          
+#centerMessage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;   
 
 }
 
+#userMessage{
+
+    border-radius: 25px;
+    border: 2px solid white;
+    padding: 20px; 
+    width: 500px;
+    height:270px;
+    text-align: center; 
+}
+
+.searchLink{ 
+    color: green; 
+    background-color: transparent; 
+    text-decoration: none;
+}
+
+.searchLink: visited {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.searchLink:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.searchLink:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
 
 
+.splash {
+	/* Width and height of splash screen */
+	height: 100vh;
+	width: 100%;
+	/* Remove from document flow and allow <div> to float on top */
+	position: absolute;
+	z-index: -1;
+}
+
+.splash > .image-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	animation: fadeInOut 5s infinite;
+}
+
+.splash > .overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.splash img {
+	position: absolute;
+	top: 0;
+	/* Cover the entire container */
+	object-fit: cover;
+	/* Note: Aspect ratio is preserved because height is auto by default */
+	width: 100%;
+	height: 0;
+
+	/* Swap out image; each gets 5s */
+	animation: imageSwap 50s infinite;
+}
+
+.splash img:nth-child(2) {
+	animation-delay: 5s;
+}
+.splash img:nth-child(3) {
+	animation-delay: 10s;
+}
+.splash img:nth-child(4) {
+	animation-delay: 15s;
+}
+.splash img:nth-child(5) {
+	animation-delay: 20s;
+}
+.splash img:nth-child(6) {
+	animation-delay: 25s;
+}
+.splash img:nth-child(7) {
+	animation-delay: 30s;
+}
+.splash img:nth-child(8) {
+	animation-delay: 35s;
+}
+.splash img:nth-child(9) {
+	animation-delay: 40s;
+}
+.splash img:nth-child(10) {
+	animation-delay: 45s;
+}
+
+@keyframes fadeInOut {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes imageSwap {
+	0% {
+		/* Show the image */
+		height: 100%;
+	}
+	10% {
+		height: 100%;
+	}
+	10.00000001% {
+		/* Hide the image */
+		height: 0;
+	}
+	100% {
+		height: 0;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+#carousel .carousel-img {
+	height: 100%;
+	width: 100%;
+	max-height: 100%;
+	max-width: 100% ;
+	position: absolute;
+	opacity: 0;
+	-webkit-animation-name: "css-animation-fade";
+	-webkit-animation-duration: 30sec;
+	-webkit-animation-iteration-count: infinite;
+
+
+}
+
+#carousel .carousel-img:nth-child(2) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(3) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(4) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(5) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(6) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(7) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(8) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(9) {
+	-webkit-animation-delay: 15s;
+}
+
+#carousel .carousel-img:nth-child(10) {
+	-webkit-animation-delay: 15s;
+}
+
+
+
+@-webkit-keyframes css-animation-fade {
+
+	from  { opacity: 0;}
+	    5%  {opacity: 1;}
+	    15%  {opacity: 1;}
+	    20%  {opacity: 0;}
+	to  {opacity: 0;}
+
+}
+
+header {
+	background: white;
+	margin: 20px;
+}
+
+
+header > h1 {
+
+	background: -webkit-linear-gradient(rgb(0, 0, 0), #333);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+	text-align: center;
+}
+
+#user-message {
+	color: #006421;
+	font-family: 'IBM Plex Sans', sans-serif;
+	margin: 15px;
+	padding: 10px;
+
+
+}
+*/
