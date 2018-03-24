@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Google Maps Firebase</title>
-	<style>
-      #map {
-        width: 100%;
-        height: 400px;
-        background-color: grey;
-      }
+  <title>Google Maps Firebase</title>
+  <style>
+    #map {
+      width: 100%;
+      height: 400px;
+      background-color: grey;
+    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/google maps api with firebase.css">
 </head>
-<img src="assets/images/cleveland-east.jpg">
-<body class="container">
-	<h3>My Google Maps with Firebase</h3>
-    <button id="togglepreloaded">Show/Hide PreLoaded<img src="assets/map icons/map-marker-icon-small.png"></button><button id="toggleuseradded">Show/Hide User Added<img src="assets/map icons/map-marker-icon-green-small.png"></button>
+
+<body>
+  <div class="overlay"></div>
+  <img class="cleveEast" src="assets/images/cleveland-east.jpg">
+  <div class="container">
+    <h3>My Google Maps with Firebase</h3>
+    <button id="togglepreloaded">Show/Hide PreLoaded
+      <img src="assets/map icons/map-marker-icon-small.png">
+    </button>
+    <button id="toggleuseradded">Show/Hide User Added
+      <img src="assets/map icons/map-marker-icon-green-small.png">
+    </button>
     <div id="map"></div>
     <h3>Add a new attraction</h3>
-      <input type="text" name="" id="geocodinginput"><button id="geocoding">Search for Address</button>
+    <input type="text" name="" id="geocodinginput">
+    <button id="geocoding">Search for Address</button>
     <div id="geocoding-response"></div>
     <hr>
     <h3>Search the map</h3>
-      <input id="autocomplete">
-      <button id="search">Search</button>
+    <input id="autocomplete">
+    <button id="search">Search</button>
     <button id="togglesearchresults">Clear Search Results</button>
     <br>
     <div id="search-results">
@@ -41,55 +52,60 @@
     </div>
     <hr>
     <h2>Browse Attractions</h2>
-      <h3>Our own recommended offbeat attractions:</h3>
-      <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
-        <table>
-        <tr>
-          <th>Name </th>
-          <th>Address </th>
-          <th>Additional Information</th>
-        </tr>
-        <tbody id="preloaded-list"></tbody>
-      </table>
-      <hr>
-      <h3>User Recommended offbeat attractions:</h3>
-      <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
-        <table>
-          <tr>
-            <th>Name </th>
-            <th>Address </th>
-            <th>Additional Information</th>
-          </tr>
-          <tbody id="user-added-list"></tbody>
-        </table>
-        <div>
-          <p>Map Icons Credit: <a href="http://www.icons-land.com/">Icons Land</a></p>
-        </div>
+    <h3>Our own recommended offbeat attractions:</h3>
+    <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
+    <table>
+      <tr>
+        <th>Name </th>
+        <th>Address </th>
+        <th>Additional Information</th>
+      </tr>
+      <tbody id="preloaded-list"></tbody>
+    </table>
+    <hr>
+    <h3>User Recommended offbeat attractions:</h3>
+    <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
+    <table>
+      <tr>
+        <th>Name </th>
+        <th>Address </th>
+        <th>Additional Information</th>
+      </tr>
+      <tbody id="user-added-list"></tbody>
+    </table>
+    <div>
+      <div id="mapIcons">
+        <p class="mapIcons">Map Icons Credit:
+          <a href="http://www.icons-land.com/">Icons Land</a>
+        </p>
+      </div>
+    </div>
+  </div>
   <script>
-      var searchResults = document.getElementById("search-results");
-      searchResults.style.display = "none";
+    var searchResults = document.getElementById("search-results");
+    searchResults.style.display = "none";
 
-      //The following 3 blocks of code are JQuery functions used to search lists of preloaded and user added attractions as well as search results 
-      $("#searchResultsInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#places tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+    //The following 3 blocks of code are JQuery functions used to search lists of preloaded and user added attractions as well as search results 
+    $("#searchResultsInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#places tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
       });
-    
-      $("#searchpreloaded").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#preloaded-list tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+    });
+
+    $("#searchpreloaded").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#preloaded-list tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
       });
-  
-      $("#search-user-added").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#user-added-list tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+    });
+
+    $("#search-user-added").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#user-added-list tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
       });
+    });
 
     //This code configures the Firebase database used to hold preloaded and user added location data
     var config = {
@@ -104,7 +120,7 @@
     firebase.initializeApp(config);
 
     var database = firebase.database();
-    
+
     var preLoadedAttractions = [];
 
     var map;
@@ -127,19 +143,27 @@
     function initMap() {
 
       //This Code deals with setting, showing, and hiding preloaded data from Firebase as well as configuring the google map around the desired location
-      database.ref("preloaded/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("preloaded/preloaded-attractions").once('value').then(function (snapshot) {
 
         preLoadedAttractions = snapshot.val();
-        
+
         var options = {
           zoom: 11,
-          center: {lat: 41.4993, lng: -81.6944 }
+          center: {
+            lat: 41.4993,
+            lng: -81.6944
+          }
         }
 
         map = new google.maps.Map(document.getElementById("map"), options)
 
-        var bounds = new google.maps.LatLngBounds(
-          {lat: 41.359552, lng: -81.965657}, {lat: 41.615186, lng: -81.398746});
+        var bounds = new google.maps.LatLngBounds({
+          lat: 41.359552,
+          lng: -81.965657
+        }, {
+          lat: 41.615186,
+          lng: -81.398746
+        });
         map.fitBounds(bounds);
 
         function setPreLoadedAttractions() {
@@ -149,37 +173,40 @@
             var marker = new google.maps.Marker({
               position: preLoadedAttractions[i].position,
               map: map,
-              icon: "assets/map icons/map-marker-icon.png"});
+              icon: "assets/map icons/map-marker-icon.png"
+            });
 
-            marker.content = "<strong>" + preLoadedAttractions[i].name + "</strong>" + "<br> " + preLoadedAttractions[i].address;
+            marker.content = "<strong>" + preLoadedAttractions[i].name + "</strong>" + "<br> " +
+              preLoadedAttractions[i].address;
 
             var infoWindow = new google.maps.InfoWindow();
-            google.maps.event.addListener(marker, "click", function() {
+            google.maps.event.addListener(marker, "click", function () {
               infoWindow.setContent(this.content);
               infoWindow.open(this.getMap(), this);
             });
 
             preLoadedMarkers.push(marker);
-          }     
+          }
         }
 
         //Calling the function here ensures preloaded attractions are set when page loads
         setPreLoadedAttractions();
 
         //A click even to the "Show/Hide" button to show/hide map icons
-        togglepreloaded.onclick = function(event) {
+        togglepreloaded.onclick = function (event) {
           if (showPreLoaded === true) {
             removePreLoadedMarkers();
             showPreLoaded = false;
             return;
-          } if (showPreLoaded === false) {
+          }
+          if (showPreLoaded === false) {
             setPreLoadedAttractions();
             showPreLoaded = true;
             return;
           }
-          
+
         }
-        
+
         //Removes preloaded markers by setting them to null. Preloaded locations are put into an array when set; this function loops through that array and then empties the array
         function removePreLoadedMarkers() {
           for (i = 0; i < preLoadedMarkers.length; i++) {
@@ -191,14 +218,19 @@
       });
 
       //This code deals with searching the map using the places
-      search.onclick = function(event) {
+      search.onclick = function (event) {
         removeSearchResults();
         searchEntry = document.getElementById("autocomplete").value
         document.getElementById("autocomplete").value = "";
-        
+
         //Sets the bounds into which the search is biased
-        var bounds = new google.maps.LatLngBounds(
-          {lat: 41.359552, lng: -81.965657}, {lat: 41.615186, lng: -81.398746});
+        var bounds = new google.maps.LatLngBounds({
+          lat: 41.359552,
+          lng: -81.965657
+        }, {
+          lat: 41.615186,
+          lng: -81.398746
+        });
         map.fitBounds(bounds);
 
         var request = {
@@ -224,7 +256,7 @@
               marker.content = "<strong>" + place.name + "</strong>" + "<br> " + place.formatted_address;
 
               var infoWindow = new google.maps.InfoWindow();
-              google.maps.event.addListener(marker, "click", function() {
+              google.maps.event.addListener(marker, "click", function () {
                 infoWindow.setContent(this.content);
                 infoWindow.open(this.getMap(), this);
               });
@@ -254,10 +286,10 @@
           var infoTD = document.createElement('td');
           newRow.appendChild(infoTD);
           infoTD.textContent = "Sample Text Here";
-          }
+        }
       }
 
-      togglesearchresults.onclick = function(event) {
+      togglesearchresults.onclick = function (event) {
         removeSearchResults();
       }
 
@@ -277,104 +309,106 @@
       function setAddedAttractions() {
         showUserAdded = true;
 
-        database.ref("/user added attractions").once('value').then(function(snapshot) {
-        snapshot.forEach(function(place) { 
+        database.ref("/user added attractions").once('value').then(function (snapshot) {
+          snapshot.forEach(function (place) {
 
-          var marker = new google.maps.Marker({
-            position: place.val().position,
-            map: map,
-            icon: "assets/map icons/map-marker-icon-green.png"
-          })
+            var marker = new google.maps.Marker({
+              position: place.val().position,
+              map: map,
+              icon: "assets/map icons/map-marker-icon-green.png"
+            })
 
-          marker.content = "<strong>" + place.val().name + "</strong>" + "<br> " + place.val().address;
+            marker.content = "<strong>" + place.val().name + "</strong>" + "<br> " + place.val().address;
 
-          var infoWindow = new google.maps.InfoWindow();
-            google.maps.event.addListener(marker, "click", function() {
-               infoWindow.setContent(this.content);
-               infoWindow.open(this.getMap(), this);
+            var infoWindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(marker, "click", function () {
+              infoWindow.setContent(this.content);
+              infoWindow.open(this.getMap(), this);
             });
 
-          newAttractionsMarkers.push(marker);
-         })
-      });
-    }
+            newAttractionsMarkers.push(marker);
+          })
+        });
+      }
 
-    //Calling the function here ensures database user added attractions are set when page loads
-    setAddedAttractions();
+      //Calling the function here ensures database user added attractions are set when page loads
+      setAddedAttractions();
 
-    //This function removes attractions from the map 
-    function removeNewAttractionsMarkers() {
-          for (i = 0; i < newAttractionsMarkers.length; i++) {
-            newAttractionsMarkers[i].setMap(null);
-          }
-          newAttractionsMarkers = [];
+      //This function removes attractions from the map 
+      function removeNewAttractionsMarkers() {
+        for (i = 0; i < newAttractionsMarkers.length; i++) {
+          newAttractionsMarkers[i].setMap(null);
+        }
+        newAttractionsMarkers = [];
+      }
+
+      //This click event shows/hids user added locations on the map by calling the corresponding functions
+      toggleuseradded.onclick = function (event) {
+        if (showUserAdded === true) {
+          removeNewAttractionsMarkers();
+          showUserAdded = false;
+        } else if (showUserAdded === false) {
+          setAddedAttractions();
         }
 
-    //This click event shows/hids user added locations on the map by calling the corresponding functions
-    toggleuseradded.onclick = function(event) {
-      if (showUserAdded === true) {
-        removeNewAttractionsMarkers();
-        showUserAdded = false;
-      } else if (showUserAdded === false) {
-        setAddedAttractions();
       }
-      
-    }
 
-    //This click event uses the Google Places API to add a new location to the user added branch of the database
-      geocoding.onclick = function(event) {
+      //This click event uses the Google Places API to add a new location to the user added branch of the database
+      geocoding.onclick = function (event) {
         var address = document.getElementById("geocodinginput").value;
-  
-        document.getElementById("geocoding-response").innerHTML = "";
-        
-          $.ajax({
-            url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms",
-            method: "GET"
-          }).then(function(response) {
-            console.log(response.status)
-            if (response.status === "ZERO_RESULTS") {
-              var geocodingResponse = document.getElementById("geocoding-response");
-              var addressDiv = document.createElement('div');
-              geocodingResponse.appendChild(addressDiv);
 
-              addressDiv.innerHTML = "<strong>Please enter a valid address.</strong>"
-            } else {
+        document.getElementById("geocoding-response").innerHTML = "";
+
+        $.ajax({
+          url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + address +
+            "&key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms",
+          method: "GET"
+        }).then(function (response) {
+          console.log(response.status)
+          if (response.status === "ZERO_RESULTS") {
+            var geocodingResponse = document.getElementById("geocoding-response");
+            var addressDiv = document.createElement('div');
+            geocodingResponse.appendChild(addressDiv);
+
+            addressDiv.innerHTML = "<strong>Please enter a valid address.</strong>"
+          } else {
             var geocodingResponse = document.getElementById("geocoding-response");
             var addressDiv = document.createElement('div');
             geocodingResponse.appendChild(addressDiv);
 
             addressDiv.innerHTML = "<p>Is this the address you were looking for?</p>" +
-                                   "<p><strong>" + response.results[0].formatted_address + "</strong></p>" + "<p>If yes, enter the name of the location and click submit to add it to the map.</p><input id='locationname'><button id='submit'>Submit</button><button id='clearaddress'>Clear result</button>"
-            
+              "<p><strong>" + response.results[0].formatted_address + "</strong></p>" +
+              "<p>If yes, enter the name of the location and click submit to add it to the map.</p><input id='locationname'><button id='submit'>Submit</button><button id='clearaddress'>Clear result</button>"
+
             geocodingAddress = response.results[0].formatted_address;
             geocodingPosition = response.results[0].geometry.location;
-            }
-          });
+          }
+        });
       }
 
       //Collects user added info and sends it to the database, then calls the function to add it to the map
-      $(document).on("click", "#submit", function() {
+      $(document).on("click", "#submit", function () {
         geocodingName = document.getElementById("locationname").value;
 
         database.ref("/user added attractions").push({
-          position: geocodingPosition, 
-          name: geocodingName, 
+          position: geocodingPosition,
+          name: geocodingName,
           address: geocodingAddress
         })
 
         document.getElementById("geocoding-response").innerHTML = "";
-        document.getElementById("geocodinginput").value = "";        
+        document.getElementById("geocodinginput").value = "";
 
         setAddedAttractions();
       });
 
-      $(document).on("click", "#clearaddress", function() {
+      $(document).on("click", "#clearaddress", function () {
         document.getElementById("geocoding-response").innerHTML = "";
         document.getElementById("geocodinginput").value = "";
       })
 
       //This code listens to the user added locations in the database, and updates the map and user added list when there are any changes
-      database.ref("/user added attractions").on("child_added", function(snapshot) {
+      database.ref("/user added attractions").on("child_added", function (snapshot) {
         createUserAddedList();
         setAddedAttractions();
       });
@@ -382,7 +416,7 @@
 
     //The following 2 functions create lists of the preloaded and user added attractions in database, including name, address, and additional information
     function createPreloadedList() {
-      database.ref("/preloaded/preloaded-attractions").once('value').then(function(snapshot) {
+      database.ref("/preloaded/preloaded-attractions").once('value').then(function (snapshot) {
 
         for (i = 0; i < snapshot.val().length; i++) {
           var name = snapshot.val()[i].name;
@@ -412,11 +446,11 @@
     createPreloadedList();
 
     function createUserAddedList() {
-      
-      database.ref("/user added attractions").once('value').then(function(snapshot) {
+
+      database.ref("/user added attractions").once('value').then(function (snapshot) {
         document.getElementById("user-added-list").innerHTML = "";
 
-        snapshot.forEach(function(place) {
+        snapshot.forEach(function (place) {
 
           var name = place.val().name;
           var address = place.val().address;
@@ -440,10 +474,9 @@
         });
       })
     }
-
   </script>
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms&callback=initMap&libraries=places,geometry">
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms&callback=initMap&libraries=places,geometry">
   </script>
 </body>
-</html>  
+
+</html>
