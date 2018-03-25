@@ -441,6 +441,47 @@
       })
     }
 
+var lat = 41.49792710000001;
+        var lng = -81.69351809999999;
+        var name = "Tower City"
+
+        function getExtract(lat, lng, name) {
+          var pageID;
+
+          $.ajax({
+            type: "GET",
+            url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+            success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            console.log(pageID)
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+          var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+          $.ajax({
+            url: queryURL,
+            method: 'GET',
+        }).then(function(response) {
+             console.log(response)
+             var extract = response.query.pages["" + pageID + ""].extract;
+             if (extract.includes(name)) {
+              console.log(extract);
+             } else {
+              console.log("No information found")
+             }
+             
+        });
+
+        }
+
+        getExtract(lat, lng, name);
+        
   </script>
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms&callback=initMap&libraries=places,geometry">
