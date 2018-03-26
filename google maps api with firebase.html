@@ -16,7 +16,6 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/google maps api with firebase.css">
 </head>
-<<<<<<< HEAD
 
 <body>
   <div class="overlay"></div>
@@ -29,12 +28,6 @@
     <button id="toggleuseradded">Show/Hide User Added
       <img src="assets/map icons/map-marker-icon-green-small.png">
     </button>
-=======
-<img src="assets/images/clevleand-east.jpg">
-<body class="container">
-	<h3>My Google Maps with Firebase</h3>
-    <button id="togglepreloaded">Show/Hide PreLoaded<img src="assets/map icons/map-marker-icon-small.png"></button><button id="toggleuseradded">Show/Hide User Added<img src="assets/map icons/map-marker-icon-green-small.png"></button>
->>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
     <div id="map"></div>
     <h3>Add a new attraction</h3>
     <input type="text" name="" id="geocodinginput">
@@ -59,7 +52,6 @@
     </div>
     <hr>
     <h2>Browse Attractions</h2>
-<<<<<<< HEAD
     <h3>Our own recommended offbeat attractions:</h3>
     <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
     <table>
@@ -89,32 +81,6 @@
       </div>
     </div>
   </div>
-=======
-      <h3>Our own recommended offbeat attractions:</h3>
-      <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
-        <table class="table">
-        <tr>
-          <th>Name </th>
-          <th>Address </th>
-          <th>Additional Information</th>
-        </tr>
-        <tbody id="preloaded-list"></tbody>
-      </table>
-      <hr>
-      <h3>User Recommended offbeat attractions:</h3>
-      <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
-        <table class="table">
-          <tr>
-            <th>Name </th>
-            <th>Address </th>
-            <th>Additional Information</th>
-          </tr>
-          <tbody id="user-added-list"></tbody>
-        </table>
-        <div>
-          <p>Map Icons Credit: <a href="http://www.icons-land.com/">Icons Land</a></p>
-        </div>
->>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
   <script>
     var searchResults = document.getElementById("search-results");
     searchResults.style.display = "none";
@@ -320,12 +286,6 @@
           newRow.appendChild(addressTD);
           addressTD.textContent = place.formatted_address;
 
-<<<<<<< HEAD
-          var infoTD = document.createElement('td');
-          newRow.appendChild(infoTD);
-          infoTD.textContent = "Sample Text Here";
-        }
-=======
           // var infoTD = document.createElement('td');
           // infoTD.setAttribute("id", "" + place.name + "")
           // newRow.appendChild(infoTD);
@@ -335,7 +295,6 @@
 
           // getExtractForSearchResults(place.geometry.location.lat, place.geometry.location.lng, place.name)
           }
->>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
       }
 
       togglesearchresults.onclick = function (event) {
@@ -502,13 +461,8 @@
       database.ref("/user added attractions").once('value').then(function (snapshot) {
         document.getElementById("user-added-list").innerHTML = "";
 
-<<<<<<< HEAD
         snapshot.forEach(function (place) {
 
-=======
-          snapshot.forEach(function(place) {
-          
->>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
           var name = place.val().name;
           var address = place.val().address;
           var info = placeInfo;
@@ -535,8 +489,6 @@
         });
       })
     }
-<<<<<<< HEAD
-=======
 
     function getExtractForUserAdded(lat, lng, name) {
       var pageID;
@@ -649,7 +601,6 @@
 
         }
         
->>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms&callback=initMap&libraries=places,geometry">
   </script>
