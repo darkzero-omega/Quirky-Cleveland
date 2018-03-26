@@ -30,11 +30,11 @@
     <br>
     <div id="search-results">
       <input type="text" id="searchResultsInput" placeholder="Start typing here to search results">
-      <table>
+      <table class="table">
         <tr>
           <th>Name </th>
           <th>Address </th>
-          <th>Additional Information</th>
+          <!--<th>Additional Information</th>-->
         </tr>
         <tbody id="places"></tbody>
       </table>
@@ -43,7 +43,7 @@
     <h2>Browse Attractions</h2>
       <h3>Our own recommended offbeat attractions:</h3>
       <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
-        <table>
+        <table class="table">
         <tr>
           <th>Name </th>
           <th>Address </th>
@@ -54,7 +54,7 @@
       <hr>
       <h3>User Recommended offbeat attractions:</h3>
       <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
-        <table>
+        <table class="table">
           <tr>
             <th>Name </th>
             <th>Address </th>
@@ -122,6 +122,8 @@
     var geocodingAddress;
     var geocodingPosition;
     var geocodingName;
+
+    var placeInfo = "No information found";
 
     //All functions using the Google Maps API must be used inside the initMap function specified as the callback function in the API url link
     function initMap() {
@@ -214,6 +216,7 @@
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
               var place = results[i];
+              //console.log(place);
               createList(results[i]);
               var marker = new google.maps.Marker({
                 position: place.geometry.location,
@@ -251,9 +254,14 @@
           newRow.appendChild(addressTD);
           addressTD.textContent = place.formatted_address;
 
-          var infoTD = document.createElement('td');
-          newRow.appendChild(infoTD);
-          infoTD.textContent = "Sample Text Here";
+          // var infoTD = document.createElement('td');
+          // infoTD.setAttribute("id", "" + place.name + "")
+          // newRow.appendChild(infoTD);
+          // infoTD.textContent = "No information found";
+
+          //console.log(place.geometry.location.lat);
+
+          // getExtractForSearchResults(place.geometry.location.lat, place.geometry.location.lng, place.name)
           }
       }
 
@@ -387,7 +395,7 @@
         for (i = 0; i < snapshot.val().length; i++) {
           var name = snapshot.val()[i].name;
           var address = snapshot.val()[i].address;
-          var info = "sample text here";
+          var info = "No information found";
 
           var preloadedList = document.getElementById("preloaded-list");
           var newRow = document.createElement('tr');
@@ -402,8 +410,11 @@
           addressTD.textContent = address;
 
           var infoTD = document.createElement('td');
+          infoTD.setAttribute("id","" + name + "")
           newRow.appendChild(infoTD);
           infoTD.textContent = info;
+
+          getExtractForPreloaded(snapshot.val()[i].position.lat, snapshot.val()[i].position.lng, snapshot.val()[i].name);
         }
       })
     }
@@ -416,11 +427,12 @@
       database.ref("/user added attractions").once('value').then(function(snapshot) {
         document.getElementById("user-added-list").innerHTML = "";
 
-        snapshot.forEach(function(place) {
-
+          snapshot.forEach(function(place) {
+          
           var name = place.val().name;
           var address = place.val().address;
-          var info = "sample text here";
+          var info = placeInfo;
+
 
           var userAddedList = document.getElementById("user-added-list");
           var newRow = document.createElement('tr');
@@ -435,52 +447,125 @@
           addressTD.textContent = address;
 
           var infoTD = document.createElement('td');
+          infoTD.setAttribute("id", "" + name + "")
           newRow.appendChild(infoTD);
-          infoTD.textContent = info;
+          infoTD.textContent = info; 
+
+          getExtractForUserAdded(place.val().position.lat, place.val().position.lng, place.val().name)
         });
       })
     }
 
-var lat = 41.49792710000001;
-        var lng = -81.69351809999999;
-        var name = "Tower City"
+    function getExtractForUserAdded(lat, lng, name) {
+      var pageID;
 
-        function getExtract(lat, lng, name) {
-          var pageID;
-
-          $.ajax({
-            type: "GET",
-            url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
-            success: function (data, textStatus, jqXHR) {
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
             
             pageID = data.query.geosearch[0].pageid;
 
-            console.log(pageID)
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No information found";
+                 }
+                 
+            });
      
             },
             error: function (errorMessage) {
             }
         });
 
-          var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+        }
 
-          $.ajax({
-            url: queryURL,
-            method: 'GET',
-        }).then(function(response) {
-             console.log(response)
-             var extract = response.query.pages["" + pageID + ""].extract;
-             if (extract.includes(name)) {
-              console.log(extract);
-             } else {
-              console.log("No information found")
-             }
-             
+    function getExtractForPreloaded(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No info found";
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
         });
 
         }
 
-        getExtract(lat, lng, name);
+    function getExtractForSearchResults(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No info found";
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+        }
         
   </script>
   <script async defer
