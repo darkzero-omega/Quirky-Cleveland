@@ -16,6 +16,7 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/google maps api with firebase.css">
 </head>
+<<<<<<< HEAD
 
 <body>
   <div class="overlay"></div>
@@ -28,6 +29,12 @@
     <button id="toggleuseradded">Show/Hide User Added
       <img src="assets/map icons/map-marker-icon-green-small.png">
     </button>
+=======
+<img src="assets/images/clevleand-east.jpg">
+<body class="container">
+	<h3>My Google Maps with Firebase</h3>
+    <button id="togglepreloaded">Show/Hide PreLoaded<img src="assets/map icons/map-marker-icon-small.png"></button><button id="toggleuseradded">Show/Hide User Added<img src="assets/map icons/map-marker-icon-green-small.png"></button>
+>>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
     <div id="map"></div>
     <h3>Add a new attraction</h3>
     <input type="text" name="" id="geocodinginput">
@@ -41,17 +48,18 @@
     <br>
     <div id="search-results">
       <input type="text" id="searchResultsInput" placeholder="Start typing here to search results">
-      <table>
+      <table class="table">
         <tr>
           <th>Name </th>
           <th>Address </th>
-          <th>Additional Information</th>
+          <!--<th>Additional Information</th>-->
         </tr>
         <tbody id="places"></tbody>
       </table>
     </div>
     <hr>
     <h2>Browse Attractions</h2>
+<<<<<<< HEAD
     <h3>Our own recommended offbeat attractions:</h3>
     <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
     <table>
@@ -81,6 +89,32 @@
       </div>
     </div>
   </div>
+=======
+      <h3>Our own recommended offbeat attractions:</h3>
+      <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
+        <table class="table">
+        <tr>
+          <th>Name </th>
+          <th>Address </th>
+          <th>Additional Information</th>
+        </tr>
+        <tbody id="preloaded-list"></tbody>
+      </table>
+      <hr>
+      <h3>User Recommended offbeat attractions:</h3>
+      <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
+        <table class="table">
+          <tr>
+            <th>Name </th>
+            <th>Address </th>
+            <th>Additional Information</th>
+          </tr>
+          <tbody id="user-added-list"></tbody>
+        </table>
+        <div>
+          <p>Map Icons Credit: <a href="http://www.icons-land.com/">Icons Land</a></p>
+        </div>
+>>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
   <script>
     var searchResults = document.getElementById("search-results");
     searchResults.style.display = "none";
@@ -138,6 +172,8 @@
     var geocodingAddress;
     var geocodingPosition;
     var geocodingName;
+
+    var placeInfo = "No information found";
 
     //All functions using the Google Maps API must be used inside the initMap function specified as the callback function in the API url link
     function initMap() {
@@ -246,6 +282,7 @@
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
               var place = results[i];
+              //console.log(place);
               createList(results[i]);
               var marker = new google.maps.Marker({
                 position: place.geometry.location,
@@ -283,10 +320,22 @@
           newRow.appendChild(addressTD);
           addressTD.textContent = place.formatted_address;
 
+<<<<<<< HEAD
           var infoTD = document.createElement('td');
           newRow.appendChild(infoTD);
           infoTD.textContent = "Sample Text Here";
         }
+=======
+          // var infoTD = document.createElement('td');
+          // infoTD.setAttribute("id", "" + place.name + "")
+          // newRow.appendChild(infoTD);
+          // infoTD.textContent = "No information found";
+
+          //console.log(place.geometry.location.lat);
+
+          // getExtractForSearchResults(place.geometry.location.lat, place.geometry.location.lng, place.name)
+          }
+>>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
       }
 
       togglesearchresults.onclick = function (event) {
@@ -421,7 +470,7 @@
         for (i = 0; i < snapshot.val().length; i++) {
           var name = snapshot.val()[i].name;
           var address = snapshot.val()[i].address;
-          var info = "sample text here";
+          var info = "No information found";
 
           var preloadedList = document.getElementById("preloaded-list");
           var newRow = document.createElement('tr');
@@ -436,8 +485,11 @@
           addressTD.textContent = address;
 
           var infoTD = document.createElement('td');
+          infoTD.setAttribute("id","" + name + "")
           newRow.appendChild(infoTD);
           infoTD.textContent = info;
+
+          getExtractForPreloaded(snapshot.val()[i].position.lat, snapshot.val()[i].position.lng, snapshot.val()[i].name);
         }
       })
     }
@@ -450,11 +502,17 @@
       database.ref("/user added attractions").once('value').then(function (snapshot) {
         document.getElementById("user-added-list").innerHTML = "";
 
+<<<<<<< HEAD
         snapshot.forEach(function (place) {
 
+=======
+          snapshot.forEach(function(place) {
+          
+>>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
           var name = place.val().name;
           var address = place.val().address;
-          var info = "sample text here";
+          var info = placeInfo;
+
 
           var userAddedList = document.getElementById("user-added-list");
           var newRow = document.createElement('tr');
@@ -469,11 +527,129 @@
           addressTD.textContent = address;
 
           var infoTD = document.createElement('td');
+          infoTD.setAttribute("id", "" + name + "")
           newRow.appendChild(infoTD);
-          infoTD.textContent = info;
+          infoTD.textContent = info; 
+
+          getExtractForUserAdded(place.val().position.lat, place.val().position.lng, place.val().name)
         });
       })
     }
+<<<<<<< HEAD
+=======
+
+    function getExtractForUserAdded(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No information found";
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+        }
+
+    function getExtractForPreloaded(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No info found";
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+        }
+
+    function getExtractForSearchResults(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  console.log("No information found")
+                  placeInfo = "No info found";
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+        }
+        
+>>>>>>> f7b16ed654c8881b45efaff74af2552b30640e21
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB00HoG_XIHLQirqHUmhGSR1aBdnDjjCms&callback=initMap&libraries=places,geometry">
   </script>
