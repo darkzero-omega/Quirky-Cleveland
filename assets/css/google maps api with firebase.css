@@ -38,3 +38,15 @@ body>.overlay {
 	text-align: center;	
 }
 
+td {
+	min-width: 150px;
+}
+
+#searchResultsInput, #searchpreloaded, #search-user-added {
+	margin: 5px 0px 5px 0;
+	width: 275px;
+}
+
+#toggleprelaoded, #toggleuseradded {
+	margin: 5px 0px 5px 0;
+}

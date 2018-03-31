@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Google Maps Firebase</title>
+  <title>Quirky Cleveland Attractions</title>
   <style>
     #map {
       width: 100%;
@@ -21,15 +21,15 @@
   <div class="overlay"></div>
   <img class="cleveEast" src="assets/images/cleveland-east.jpg">
   <div class="container">
-    <h3>My Google Maps with Firebase</h3>
-    <button id="togglepreloaded">Show/Hide PreLoaded
+    <h3>Quirky Cleveland Attractions</h3>
+    <button id="togglepreloaded">Show/Hide Our Own Attractions
       <img src="assets/map icons/map-marker-icon-small.png">
     </button>
-    <button id="toggleuseradded">Show/Hide User Added
+    <button id="toggleuseradded">Show/Hide User Added Attractions
       <img src="assets/map icons/map-marker-icon-green-small.png">
     </button>
     <div id="map"></div>
-    <h3>Add a new attraction</h3>
+    <h3>Add a New Attraction</h3>
     <input type="text" name="" id="geocodinginput">
     <button id="geocoding">Search for Address</button>
     <div id="geocoding-response"></div>
@@ -54,7 +54,7 @@
     <h2>Browse Attractions</h2>
     <h3>Our own recommended offbeat attractions:</h3>
     <input type="text" id="searchpreloaded" placeholder="Start typing to search attractions">
-    <table>
+    <table class="table">
       <tr>
         <th>Name </th>
         <th>Address </th>
@@ -65,7 +65,7 @@
     <hr>
     <h3>User Recommended offbeat attractions:</h3>
     <input type="text" id="search-user-added" placeholder="Start typing to search attractions">
-    <table>
+    <table class="table">
       <tr>
         <th>Name </th>
         <th>Address </th>
