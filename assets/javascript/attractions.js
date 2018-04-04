@@ -97,8 +97,8 @@ var searchResults = document.getElementById("search-results");
               icon: "assets/map icons/map-marker-icon.png"
             });
 
-            marker.content = "<strong>" + preLoadedAttractions[i].name + "</strong>" + "<br> " +
-              preLoadedAttractions[i].address;
+            marker.content = "<div class='infoWindow'><strong>" + preLoadedAttractions[i].name + "</strong>" + "<br> " +
+              preLoadedAttractions[i].address + "</div>";
 
             var infoWindow = new google.maps.InfoWindow();
             google.maps.event.addListener(marker, "click", function () {
@@ -175,7 +175,7 @@ var searchResults = document.getElementById("search-results");
                 icon: "assets/map icons/map-marker-icon-pink.png"
               })
 
-              marker.content = "<strong>" + place.name + "</strong>" + "<br> " + place.formatted_address;
+              marker.content = "<div class='infoWindow'><strong>" + place.name + "</strong>" + "<br> " + place.formatted_address + "</div>";
 
               var infoWindow = new google.maps.InfoWindow();
               google.maps.event.addListener(marker, "click", function () {
@@ -245,7 +245,7 @@ var searchResults = document.getElementById("search-results");
               icon: "assets/map icons/map-marker-icon-green.png"
             })
 
-            marker.content = "<strong>" + place.val().name + "</strong>" + "<br> " + place.val().address;
+            marker.content = "<div class='infoWindow'><strong>" + place.val().name + "</strong>" + "<br> " + place.val().address + "</div>";
 
             var infoWindow = new google.maps.InfoWindow();
             google.maps.event.addListener(marker, "click", function () {

@@ -50,3 +50,7 @@ td {
 #toggleprelaoded, #toggleuseradded {
 	margin: 5px 0px 5px 0;
 }
+
+.infoWindow {
+	color: black;
+}
