@@ -210,9 +210,9 @@ var searchResults = document.getElementById("search-results");
           // newRow.appendChild(infoTD);
           // infoTD.textContent = "No information found";
 
-          //console.log(place.geometry.location.lat);
+          // console.log(place.geometry.location.lat);
 
-          // getExtractForSearchResults(place.geometry.location.lat, place.geometry.location.lng, place.name)
+          // getExtract(place.geometry.location.lat, place.geometry.location.lng, place.name)
           }
       }
 
@@ -367,7 +367,7 @@ var searchResults = document.getElementById("search-results");
           newRow.appendChild(infoTD);
           infoTD.textContent = info;
 
-          getExtractForPreloaded(snapshot.val()[i].position.lat, snapshot.val()[i].position.lng, snapshot.val()[i].name);
+          getExtract(snapshot.val()[i].position.lat, snapshot.val()[i].position.lng, snapshot.val()[i].name);
         }
       })
     }
@@ -404,12 +404,12 @@ var searchResults = document.getElementById("search-results");
           newRow.appendChild(infoTD);
           infoTD.textContent = info; 
 
-          getExtractForUserAdded(place.val().position.lat, place.val().position.lng, place.val().name)
+          getExtract(place.val().position.lat, place.val().position.lng, place.val().name)
         });
       })
     }
 
-    function getExtractForUserAdded(lat, lng, name) {
+    function getExtract(lat, lng, name) {
       var pageID;
 
       $.ajax({
@@ -433,45 +433,10 @@ var searchResults = document.getElementById("search-results");
                   var placeInfoTD = document.getElementById("" + name + "");
                   placeInfoTD.textContent = placeInfo;
                  } else {
-                  console.log("No information found")
+                  console.log("No information found");
                   placeInfo = "No information found";
-                 }
-                 
-            });
-     
-            },
-            error: function (errorMessage) {
-            }
-        });
-
-        }
-
-    function getExtractForPreloaded(lat, lng, name) {
-      var pageID;
-
-      $.ajax({
-        type: "GET",
-        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
-        success: function (data, textStatus, jqXHR) {
-            
-            pageID = data.query.geosearch[0].pageid;
-
-            //console.log(pageID)
-
-            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
-
-              $.ajax({
-                url: queryURL,
-                method: 'GET',
-            }).then(function(response) {
-                 var extract = response.query.pages["" + pageID + ""].extract;
-                 if (extract.includes(name)) {
-                  placeInfo = extract;
                   var placeInfoTD = document.getElementById("" + name + "");
                   placeInfoTD.textContent = placeInfo;
-                 } else {
-                  console.log("No information found")
-                  placeInfo = "No info found";
                  }
                  
             });
@@ -482,41 +447,3 @@ var searchResults = document.getElementById("search-results");
         });
 
         }
-
-    function getExtractForSearchResults(lat, lng, name) {
-      var pageID;
-
-      $.ajax({
-        type: "GET",
-        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
-        success: function (data, textStatus, jqXHR) {
-            
-            pageID = data.query.geosearch[0].pageid;
-
-            //console.log(pageID)
-
-            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
-
-              $.ajax({
-                url: queryURL,
-                method: 'GET',
-            }).then(function(response) {
-                 var extract = response.query.pages["" + pageID + ""].extract;
-                 if (extract.includes(name)) {
-                  placeInfo = extract;
-                  var placeInfoTD = document.getElementById("" + name + "");
-                  placeInfoTD.textContent = placeInfo;
-                 } else {
-                  console.log("No information found")
-                  placeInfo = "No info found";
-                 }
-                 
-            });
-     
-            },
-            error: function (errorMessage) {
-            }
-        });
-
-        }
-//});

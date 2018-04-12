@@ -54,3 +54,7 @@ td {
 .infoWindow {
 	color: black;
 }
+
+#submit, #clearaddress {
+	margin-left: 5px;
+}
