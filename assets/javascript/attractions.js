@@ -60,6 +60,46 @@ var searchResults = document.getElementById("search-results");
 
     var placeInfo = "No information found";
 
+    //Function to pull Wikipedia extract searching by latitude, longitude and place name
+    function getExtract(lat, lng, name) {
+      var pageID;
+
+      $.ajax({
+        type: "GET",
+        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
+        success: function (data, textStatus, jqXHR) {
+            
+            pageID = data.query.geosearch[0].pageid;
+
+            //console.log(pageID)
+
+            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
+
+              $.ajax({
+                url: queryURL,
+                method: 'GET',
+            }).then(function(response) {
+                 var extract = response.query.pages["" + pageID + ""].extract;
+                 if (extract.includes(name)) {
+                  placeInfo = extract;
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 } else {
+                  //console.log("No information found");
+                  placeInfo = "No information found";
+                  var placeInfoTD = document.getElementById("" + name + "");
+                  placeInfoTD.textContent = placeInfo;
+                 }
+                 
+            });
+     
+            },
+            error: function (errorMessage) {
+            }
+        });
+
+        }
+
     //All functions using the Google Maps API must be used inside the initMap function specified as the callback function in the API url link
     function initMap() {
 
@@ -205,14 +245,12 @@ var searchResults = document.getElementById("search-results");
           newRow.appendChild(addressTD);
           addressTD.textContent = place.formatted_address;
 
-          // var infoTD = document.createElement('td');
-          // infoTD.setAttribute("id", "" + place.name + "")
-          // newRow.appendChild(infoTD);
-          // infoTD.textContent = "No information found";
+           var infoTD = document.createElement('td');
+           infoTD.setAttribute("id", "" + place.name + "")
+           newRow.appendChild(infoTD);
+           infoTD.textContent = "No information found";
 
-          // console.log(place.geometry.location.lat);
-
-          // getExtract(place.geometry.location.lat, place.geometry.location.lng, place.name)
+           getExtract(place.geometry.location.lat(), place.geometry.location.lng(), place.name)
           }
       }
 
@@ -409,41 +447,4 @@ var searchResults = document.getElementById("search-results");
       })
     }
 
-    function getExtract(lat, lng, name) {
-      var pageID;
-
-      $.ajax({
-        type: "GET",
-        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&list=geosearch&gsradius=10000&gscoord=" + lat + "|" + lng + "&format=json&gslimit=1",
-        success: function (data, textStatus, jqXHR) {
-            
-            pageID = data.query.geosearch[0].pageid;
-
-            //console.log(pageID)
-
-            var queryURL = "https://en.wikipedia.org/w/api.php?&origin=*&format=json&action=query&redirects=1&generator=geosearch&prop=extracts|coordinates|pageimages&ggslimit=1&ggsradius=1000&ggscoord=" + lat + "|" + lng + "&exintro=1&explaintext=1&exlimit=1&coprop=type|dim|globe&colimit=1&piprop=thumbnail&pithumbsize=400&pilimit=1";
-
-              $.ajax({
-                url: queryURL,
-                method: 'GET',
-            }).then(function(response) {
-                 var extract = response.query.pages["" + pageID + ""].extract;
-                 if (extract.includes(name)) {
-                  placeInfo = extract;
-                  var placeInfoTD = document.getElementById("" + name + "");
-                  placeInfoTD.textContent = placeInfo;
-                 } else {
-                  console.log("No information found");
-                  placeInfo = "No information found";
-                  var placeInfoTD = document.getElementById("" + name + "");
-                  placeInfoTD.textContent = placeInfo;
-                 }
-                 
-            });
-     
-            },
-            error: function (errorMessage) {
-            }
-        });
-
-        }
+    
